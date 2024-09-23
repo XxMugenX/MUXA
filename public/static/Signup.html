@@ -1,0 +1,147 @@
+<!--
+	lgbar: login bars
+	lgbx: login box
+	usr: user
+		
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+	<link rel="stylesheet" href="css/style.css">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+
+<div class="container" style="width: 550px; height: 600px;">
+	<form id="Signup-form" action="">
+
+			<h1 class="welcome" style="margin-top: 0px; margin-bottom: 0px;">LET'S GET YOU STARTED</h1>
+
+            <div class="logins">
+               <div style="display: inline-block;  margin-right: 190px;"> 
+                    <label class="sign-up" >Firstname</label>
+               </div>
+
+                <div style="display: inline-block; ">
+                    <label class="sign-up" >Lastname</label>
+                </div>
+                
+                <input id="F-Name" class="lgbar" type="text" autocomplete="off" required style="width: 40%; display: inline-block;  margin: 0px 60px px 0px">
+                <input id="L-Name" class="lgbar" type="text" autocomplete="off" required style="width: 40%; margin: 0px px 0px 0px;">
+
+                <label class="sign-up">Phone Number</label>
+                <input id="telephone" class="lgbar" type="tel" required>
+
+                <label class="sign-up"> Date of Birth</label>
+                <input id="DOB" class="lgbar" type="date" required>
+
+                <label class="sign-up">Email</label>
+                <input id="email" class="lgbar" type="email" required>
+                
+            </div>
+
+			<div class="logins">
+				<label class="user">Username <span id="u-info" class="user" style="color: red;"></span></label>
+				<input id="username" class="lgbar" type="text" autocomplete="off" placeholder="Username" required>
+				<i class='bx bxs-user'></i>
+			</div>
+
+			<div class="logins">
+				<label class="password">Password<span id="p-info" class="user"  style="color: red;"></span></label>
+				<input id="password" class="lgbar" type="password" autocomplete="off" placeholder="Password" required>
+				<i class='bx bxs-lock-alt'></i>
+			</div>
+
+            <div class="logins">
+                <label class="sign-up">Repeat password</label>
+                <input id="checkpassword" class="lgbar" type="password" required>
+            </div>
+
+			<p class="submit-line">
+				<input type="submit" class="submit" value="DIVE IN">
+			</p>
+
+			<p class="persuade">Already have an account? <a class="sign" href="Login.html">Login</a></p>
+
+		</form>
+	</div>
+
+	<script>
+		const form = document.getElementById("Signup-form")
+        function check() {
+
+            //check if password is same as first password
+           /* if (password == checkpassword){
+                 var checks = document.getElementById("checkpassword")
+                 checks.style.backgroundColor="green";
+                }
+            else {
+                checks.style.borderColor = "red";
+
+            }*/
+        }
+
+		form.addEventListener('submit', Signup)
+
+		async function Signup(event) {
+            event.preventDefault();
+
+            const UserName = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const DOB = document.getElementById("DOB").value;
+            const email = document.getElementById("email").value;
+            const telephone = document.getElementById("telephone").value;
+            const F_name = document.getElementById("F-Name").value;
+            const L_name = document.getElementById("L-Name").value;
+            const checkpassword = document.getElementById("checkpassword").value;
+            const user_info = document.getElementById("u-info");
+            const password_info = document.getElementById("p-info");
+           
+
+			 const result = await fetch('/api/Signup', {
+				method: 'POST',
+				headers: {
+					'Content-Type': "application/json"
+				},
+				body: JSON.stringify({
+					UserName, password,
+                    DOB, email,
+                    telephone, F_name,
+                    L_name
+				})	
+			}).then((res) => res.json())
+            password_info.innerHTML = '';
+			user_info.innerHTML = '';
+			//console.log('works');
+            if ( result.status ==='error' & result.errortype === 'username'){
+                
+                var text= document.createTextNode(result.error);
+                user_info.appendChild(text);
+            }
+            if ( result.status === 'error' & result.errortype === 'password'){
+               // text=document.createTextNode(" ");
+                
+                const text= document.createTextNode(result.error);
+                password_info.appendChild(text);
+            }
+            if(result.status === 'ok') {
+                alert('Account created succesfully');
+                //back to previous page wont work
+                window.location.replace('./Login.html')
+            }
+                else {
+                    alert(result.error);
+                }
+		}
+
+	</script>
+</body>
+
+</html>

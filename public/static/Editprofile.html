@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editprofile</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <div class="editcontainer">
+        <div class="editbar">logo</div>
+        <div class="editfname">Edit first name: <input name="Firstname" type="text"><span class="material-symbols-outlined">
+            edit
+            </span></div>
+        <div class="editlname">Edit Last name: <input name="Lastname" type="text"><span class="material-symbols-outlined">
+            edit
+            </span></div>
+        <div class="editemail">Edit Email: <input name="Email" type="text"><span class="material-symbols-outlined">
+            edit
+            </span></div>
+       <!-- <div class="editDOB">Edit DOB: <input name="DOB" type="date"><span class="material-symbols-outlined">
+            edit
+            </span></div>-->
+        <div class="editphone">Edit Phone Number: <input name="Telephone" type="tel"><span class="material-symbols-outlined">
+            edit
+            </span></div>
+        <div class="about">About me: <input name="About" type="text"><span class="material-symbols-outlined">
+            edit
+            </span></div>
+        <div><a href="Profile.html"><button id="Update" type="button" onclick="Update()" style="margin: 10px 0px 5px 2px;  height: 30px; width: auto; background-color: grey; border-radius: 5px;"> Update </button></a></div>
+    </div>
+    
+    <script>
+        //const DOB = document.getElementById("DOB").value;
+        const Firstname = document.getElementsByName("Firstname")
+        const Lastname = document.getElementsByName("Lastname")
+        const Email = document.getElementsByName("Email")
+        //const DOB = document.getElementsByName("DOB")
+        const Telephone = document.getElementsByName("Telephone")
+        const About = document.getElementsByName("About")
+        const Updatebtn = document.getElementById("Update")
+
+        Updatebtn.addEventListener("click", Update)
+        load();
+
+
+        //addEventListener(o)
+        //make load function exportable
+    
+    //user data update start
+    async function Update(){
+    const save = await fetch('/api/Editprofile', 
+    {method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+        FirstName : Firstname[0].value,
+        LastName: Lastname[0].value,
+        Email: Email[0].value,
+       // DOB[0].value,
+        Telephone : Telephone[0].value,
+        About: About[0].value ,
+        Token : localStorage.getItem('Token')
+    })
+    }).then((res)=> res.json)
+    }
+    // user data update end
+
+    //loads user details as placeholders into input fields
+    async function load(){
+    const details = await fetch('/api/Profile',
+        {method: 'POST',
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({
+            Token : localStorage.getItem('Token')
+         })
+        }).then((res)=> res.json())
+ 
+        Firstname[0].value = details.FirstName
+        Lastname[0].value = details.LastName
+        Email[0].value = details.Email
+        //DOB[0].value = details.DOB
+        Telephone[0].value = details.Telephone
+        About[0].value = details.About
+    }
+</script>
+</body>
+</html>

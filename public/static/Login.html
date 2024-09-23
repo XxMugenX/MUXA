@@ -1,0 +1,95 @@
+<!--
+	lgbar: login bars
+	lgbx: login box
+	usr: user
+		
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+	<link rel="stylesheet" href="css/style.css">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+
+<div class="container">
+	<form id="login-form" action="">
+
+			<h1 class="welcome" style="transform: translateY(-60px);">WELCOME</h1>
+			
+			<div class="log">
+				<label class="lgbutt">LOGIN.....STRANGER</label>
+			</div>
+			<div class="user" id="err_info" style="color: red; transform: translateY(-20px);"></div>
+
+			<div class="logins">
+				<label class="user">Email/Username</label>
+				<input id="username" class="lgbar" type="text" autocomplete="off" placeholder="Email/Username" required>
+				<i class='bx bxs-user'></i>
+			</div>
+
+			<div class="logins">
+				<label class="password">Password</label>
+				<input id="password" class="lgbar" type="password" autocomplete="off" placeholder="Password" required>
+				<i class='bx bxs-lock-alt'></i>
+			</div>
+
+			<label class="Remember_me"><input type="checkbox"> Remember Me</label>
+
+			<a href="#" class="forgot">Forgot password?</a>
+
+			<p class="submit-line">
+				<input type="submit" class="submit" value="DIVE IN">
+			</p>
+
+			<p class="persuade">If you don't have an account, kindly <a class="sign" href="Signup.html">Sign Up</a></p>
+
+		</form>
+	</div>
+
+	<script>
+		const form = document.getElementById("login-form")
+
+		form.addEventListener('submit', login)
+
+		async function login(event) {
+
+			event.preventDefault();
+
+			const UserName = document.getElementById("username").value;
+			const password = document.getElementById("password").value;
+			const err_info = document.getElementById('err_info');
+			
+
+			 const result = await fetch('/api/Login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': "application/json"
+				},
+				body: JSON.stringify({
+					UserName,
+					password
+				})	
+			}).then((res) => res.json())
+			 err_info.innerHTML = ""
+			if (result.status === 'ok') {
+				localStorage.setItem('Token', result.token)
+				console.log('login successful')
+			window.location.replace('./Profile.html')
+			}
+			else {
+			const text = document.createTextNode(result.error);
+			err_info.appendChild(text);}
+		}
+
+	</script>
+</body>
+
+</html>
