@@ -134,7 +134,7 @@ app.post('/api/Profile', async(req,res)=>{
 //profile update endpoint
 app.post('/api/Editprofile', async(req,res)=> {
     const{Token, FirstName, LastName, Email, Telephone, About } = req.body
-    
+    console.log(Token)
     try {
         const person = JWT.verify(Token, JWT_SECRET)
         const _id = person.id;
@@ -169,36 +169,49 @@ app.post('/api/homepage/searcheditem',async(req,res)=>{
     })
 })
 
-app.post('api/Profile/Changepassword', async(req,res)=>{
-    const{newPassword:plainTextPassword, Token} = req.body
+app.post('/api/Changepassword', async(req,res)=>{
+    const{ Token, newPassword:plainTextPassword} = req.body
 
+    //password check
     if(typeof plainTextPassword !== 'string') {
         return res.json({
             status: 'error',
-            error: ' invalid password',
-            errortype: 'password'
+            message: ' invalid password, detected invalid characters',
+            errortype: 'password',
+            token : Token
         })
 
     }
     if(plainTextPassword.length < 6 || plainTextPassword.length === null ) {
         return res.json({
             status: 'error',
-            error: ' length must be 6 or more',
+            message: ' length must be 6 characters or more',
             errortype: 'password'
         })
     }
+    //end password check
 
     //password hashing and security
     const password = await bcrypt.hash(plainTextPassword,10);
-    //end
+    //end hashing
 
+    //updates the user password
     try{
         const person = JWT.verify(Token,JWT_SECRET)
         const _id = person.id
-        //complete later...i need to get user former password annd update with the new one
-        const user = await User.findByIdAndUpdate(_id, )
+        const user = await User.findByIdAndUpdate(_id, {Password: password})
+        return res.json({
+            status : 'ok',
+            message : 'password updated succesfully'
+        })
     }
-
+    catch(err) {
+        console.log(err)
+        return res.json({
+            status : 'Encountered an error'
+        })
+    }
+    //end password update
 })
 
 
