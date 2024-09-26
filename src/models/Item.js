@@ -4,6 +4,7 @@ const schema = mongoose.Schema
 
 const ItemSchema = new schema({
     ItemName: {type: String, required : true},
+    Category: {type: String, required : true} ,
     Description: {type: String, required: true},
     //user can add a main genre and sub genre
     Genre: [{type: String, required: true}, {type: String}],
