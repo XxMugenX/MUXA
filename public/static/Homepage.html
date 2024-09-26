@@ -23,10 +23,11 @@
         </div>
         <div class="logo">logo</div>
         <div class="b"><span class="material-symbols-outlined" >
-            <div class="settings" style="margin-left:10px ; transform: translateY(14px);" >
+            <div class="settings" onclick="showContent()" style="margin-left:10px ; transform: translateY(14px); size: 34px" >
                 drag_indicator
-            <div class="settings_content" style="transform: translateX(-45px)">
+            <div id="settings_content" class="settings_content"  >
                 <a href="#">Cart</a>
+                <a href="#">Stock-Up</a>
                 <a href="#">Sign Out</a>
                 <a href="#">Close</a>
             </div>
@@ -149,10 +150,13 @@
      <!--footer end-->
 
      <script>
+        const settings =document.getElementByClass('settings')
         const search = document.getElementById('search').value
         const s_icon = document.getElementById('s_icon')
+        const s_content = document.getElementById("settings_content")
 
         s_icon.addEventListener("click", Search)
+        settings.addEventListener("click", showContent)
 
         async function Search() {
             //that searcheditem  stuff how to add it to req.param or how to use it in query thingy
@@ -165,6 +169,10 @@
             }).then((req,res) => res.json) 
             console.log(result.result)
         }
+
+        function showContent(){
+        document.getElementById("settings_content").style.display = 'inline-flex'
+     }
 
 
 
